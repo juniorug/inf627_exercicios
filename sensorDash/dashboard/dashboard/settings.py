@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sensorDash',
+    'djangobower',
+]
+
+STATICFILES_FINDERS = [
+    'djangobower.finders.BowerFinder',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -121,3 +126,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), ".."),
+)
+
+BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+
+BOWER_INSTALLED_APPS = (
+    'd3#3.5.5',
+    'nvd3#1.7.1',
+)
