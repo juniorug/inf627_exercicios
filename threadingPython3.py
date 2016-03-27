@@ -2,7 +2,7 @@
 
 import abc
 import time
-#from concretefactory.humiditySensorFactory import HumididtySensorFactory
+from concretefactory.humiditySensorFactory import HumididtySensorFactory
 from threading import Thread
 import traceback
 
@@ -16,8 +16,9 @@ class HumidityReader(object):
         '''
         Constructor
         '''
-        #dht11 = HumididtySensorFactory.createSensor(sensorName)
-        self.sensor = Sensor()
+        self.sensor = HumididtySensorFactory.createSensor(sensorName)
+        self.sensor.changeSetup(4)
+        #self.sensor = Sensor()
         self.threadSensor = Thread(target = self.measureHumidity, args=(self.sensor,5))
         self.threadSensor.daemon = True
 
@@ -37,6 +38,7 @@ class HumidityReader(object):
         try:
             while (True) :
                 self.sensor.getHumidity()         #salvar aqui no banco a leitura
+                print ("Humidity: " + sensor.getHumidity() + "%")
                 time.sleep(delay)
         except (KeyboardInterrupt, SystemExit):
             raise
