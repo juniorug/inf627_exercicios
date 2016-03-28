@@ -37,7 +37,7 @@ class TemperatureReader(object):
     def measureTemperature(self,sensor, delay):
         try:
             while (True) :
-                self.sensor.getTemperature()         #salvar aqui no banco a leitura
+                #self.sensor.getTemperature()         #salvar aqui no banco a leitura
                 print ("Temperature: " + self.sensor.getTemperature() + u"\u00b0" + "C")
                 time.sleep(delay)
         except (KeyboardInterrupt, SystemExit):

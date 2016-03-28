@@ -36,7 +36,7 @@ class HumidityReader(object):
     def measureHumidity(self,sensor, delay):
         try:
             while (True) :
-                self.sensor.getHumidity()         #salvar aqui no banco a leitura
+                #self.sensor.getHumidity()         #salvar aqui no banco a leitura
                 print ("Humidity: " + sensor.getHumidity() + "%")
                 time.sleep(delay)
         except (KeyboardInterrupt, SystemExit):

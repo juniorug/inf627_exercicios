@@ -34,8 +34,8 @@ class LightReader(object):
     def measureLight(self,sensor, delay):
         try:
             while (True) :
-                self.sensor.getLux()         #salvar aqui no banco a leitura
-                print ("Light: " + sensor.getLux() + " lx")
+                #self.sensor.getLux()         #salvar aqui no banco a leitura
+                print ("Light: " + self.sensor.getLux() + " lx")
                 time.sleep(delay)
         except (KeyboardInterrupt, SystemExit):
             raise
