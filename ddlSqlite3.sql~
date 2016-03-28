@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `place` (
 CREATE TABLE IF NOT EXISTS `sensor_measurement` (
   `id` INTEGER PRIMARY KEY NOT NULL,
   `sensor_id` INT NULL,
-  `datetime_measurement` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `datetime_measurement` TIMESTAMP(6) NULL,
   `value` VARCHAR(45) NULL,
   `place_id` INT NULL,
   FOREIGN KEY (`sensor_id`) REFERENCES `sensor` (`id`),

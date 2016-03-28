@@ -7,4 +7,4 @@ db = DB(None, None, "localhost", None, 'mydb')
 db.insertSensorData(1, 1, 39)
 print("inserted")
 
-db.executeQuery('''select * from sensor_measurement''')
+db.executeQuery('''selec * from sensor_measurement''')
