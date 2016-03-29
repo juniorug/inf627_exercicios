@@ -4,6 +4,7 @@ import abc
 import time
 import traceback
 from concretefactory.humiditySensorFactory import HumididtySensorFactory
+from db import DB
 from threading import Thread
 
 class HumidityReader(object):
@@ -36,15 +37,22 @@ class HumidityReader(object):
     def measureHumidity(self,sensor, delay):
         try:
             while (True) :
-                #self.sensor.getHumidity()         #salvar aqui no banco a leitura
-                print ("Humidity: " + sensor.getHumidity() + "%")
+                value = self.sensor.getHumidity()         #salvar aqui no banco a leitura
+                self.insertData(value)
+                print ("Humidity: " + value + "%")
                 time.sleep(delay)
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
             print "saindo da thread"
+            traceback.print_exc()
 
-
+    def insertData(self, value):
+        db = DB(None, None, "localhost", None, 'mydb', 'mydb.db')
+        db.insertSensorData(2, 1, value)
+        print("inserted")
+        
+        
 hr = HumidityReader()
 try:
     hr.startThread()
