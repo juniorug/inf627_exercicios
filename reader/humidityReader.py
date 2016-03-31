@@ -5,7 +5,7 @@ import time
 import traceback
 from concretefactory.humiditySensorFactory import HumididtySensorFactory
 from db import DB
-from sensorReader import SensorReader
+from sensorReader import SensorReader 
 from threading import Thread
 
 class HumidityReader(SensorReader):
