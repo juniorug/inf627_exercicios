@@ -4,39 +4,35 @@ import abc
 import time
 import traceback
 import RPi.GPIO as GPIO, os
+from sensorReader import SensorReader 
 from threading import Thread
 
-class LightReader(object):
+class LightReader(SensorReader):
     '''
     classdocs
     '''
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, sensorName="LDR"):
+    def __init__(self, sensorName = "LDR", delay = 5, sensor_id = None, sensor_id = None):
         '''
         Constructor
         '''
+        SensorReader.__init__(self, None, delay, sensor_id)
         self.sensor = LDR()
-        self.threadSensor = Thread(target = self.measureLight, args=(self.sensor,5))
+        # self.threadSensor = Thread(target = self.measureLight, args=(self.sensor, delay))
         self.threadSensor.daemon = True
+    
+    def measure(self):
+        self.measureLight()
 
-    def startThread(self):
-        self.threadSensor.start()
-
-    def pauseThread(self):
-        print "inside pauseThread" 
-        #self.threadSensor.
-
-    def releaseThread(self):
-        print "inside releaseThread" 
-        self.threadSensor.release()
-        
-    def measureLight(self,sensor, delay):
+    def measureLight(self):
         try:
             while (True) :
                 #self.sensor.getLux()         #salvar aqui no banco a leitura
-                print ("Light: " + self.sensor.getLux() + " lx")
-                time.sleep(delay)
+                value =  self.sensor.getLux()
+                self.saveData(value) 
+                print ("Light: " + value + " lx")
+                time.sleep(self.delay)
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
