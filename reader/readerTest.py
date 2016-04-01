@@ -4,7 +4,7 @@ from reader import SensorReader
 import time
 
 ht = SensorReader.createReader('Temperature', 'DHT11Temperature',5)
-hh = SensorReader.createReader('Humidity','DHT11Humididty',5)
+hh = SensorReader.createReader('Humidity','DHT11Humidity',5)
 hl = SensorReader.createReader('Luminosity','LDR',5) 
 try:
     ht.startThread()

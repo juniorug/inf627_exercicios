@@ -4,7 +4,7 @@ import abc
 import time
 import traceback
 import RPi.GPIO as GPIO, os
-from concretefactory.humiditySensorFactory import HumididtySensorFactory
+from concretefactory.humiditySensorFactory import HumiditySensorFactory
 from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
 #from humidityReader import HumidityReader
 #from LightReader import LightReader
@@ -104,12 +104,12 @@ class HumidityReader(SensorReader):
     '''
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, sensorName = "DHT11Humididty", delay = 5, sensor_id = None):
+    def __init__(self, sensorName = "DHT11Humidity", delay = 5, sensor_id = None):
         '''
         Constructor
         '''
         SensorReader.__init__(self, None, delay, sensor_id)
-        self.sensor = HumididtySensorFactory.createSensor(sensorName)
+        self.sensor = HumiditySensorFactory.createSensor(sensorName)
         self.sensor.changeSetup(4)
         # self.threadSensor = Thread(target = self.measureHumidity, args=(self.sensor, delay))
         self.threadSensor.daemon = True
