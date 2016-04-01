@@ -6,10 +6,7 @@ import traceback
 import RPi.GPIO as GPIO, os
 from concretefactory.humiditySensorFactory import HumiditySensorFactory
 from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
-#from humidityReader import HumidityReader
-#from LightReader import LightReader
-#from temperatureReader import TemperatureReader
-from threading import Thread
+from threading import *
 #from models import SensorMesurement
 
 
@@ -23,20 +20,22 @@ class SensorReader(object):
         '''
         Constructor
         '''
+        self.event = Event()
+        self.event.set()
         self.threadSensor = Thread(target = self.measure, args=())
         self.sensor = sensor
         self.delay = delay
         self.sensor_id = sensor_id
 
     @staticmethod
-    def createReader(readerType, sensorType, delay):
+    def createReader(readerType, sensorType, delay, sensor_id):
 
         if (readerType == 'Temperature'):
-            return TemperatureReader(sensorType, delay)
+            return TemperatureReader(sensorType, delay, sensor_id)
         elif(readerType == 'Humidity'):
-            return HumidityReader(sensorType, delay)
+            return HumidityReader(sensorType, delay, sensor_id)
         elif(readerType == 'Luminosity'):
-            return LightReader(sensorType, delay)
+            return LightReader(sensorType, delay, sensor_id)
         else:
             assert 0, "Bad sensor creation: " + sensorType
 
@@ -46,16 +45,18 @@ class SensorReader(object):
         pass
 
     def startThread(self):
-        print "inside startThread"  
         self.threadSensor.start()
 
     def pauseThread(self):
-        print "inside pauseThread" 
-        #self.threadSensor.
+        self.event.clear()
+        print("inside pauseThread.")
 
     def releaseThread(self):
-        print "inside releaseThread" 
-        self.threadSensor.release()
+        print("inside releaseThread.")
+        self.event.set()
+        self.threadSensor = Thread(target = self.measure, args=())
+        self.threadSensor.daemon = True
+        self.threadSensor.start()
     
     def saveData(self, valuereaded = None):
           #sm = SensorMesurement(sensor_id = self.sensor_id, value = valuereaded)
@@ -74,7 +75,6 @@ class TemperatureReader(SensorReader):
         Constructor
         '''
         SensorReader.__init__(self, None, delay, sensor_id)
-        print "building sensor"
         self.sensor = TemperatureSensorFactory.createSensor(sensorName)
         self.sensor.changeSetup(4)
         # self.threadSensor = Thread(target = self.measureTemperature, args=(self.sensor,delay))
@@ -85,10 +85,10 @@ class TemperatureReader(SensorReader):
         
     def measureTemperature(self):
         try:
-            while (True) :
-                #self.sensor.getTemperature()         #salvar aqui no banco a leitura
+            #while (True) :
+            while (self.event.isSet()):       
                 value = self.sensor.getTemperature()
-                self.saveData(value) 
+                self.saveData(value)             #salvar aqui no banco a leitura
                 print ("Temperature: " + value + u"\u00b0" + "C")
                 time.sleep(self.delay)
         except (KeyboardInterrupt, SystemExit):
@@ -119,10 +119,10 @@ class HumidityReader(SensorReader):
 
     def measureHumidity(self):
         try:
-            while (True) :
-                value = self.sensor.getHumidity()         #salvar aqui no banco a leitura
-                # self.insertData(value)
-                self.saveData(value) 
+            #while (True) :
+            while (self.event.isSet()):
+                value = self.sensor.getHumidity()         
+                self.saveData(value)      #salvar aqui no banco a leitura
                 print ("Humidity: " + value + "%")
                 time.sleep(self.delay)
         except (KeyboardInterrupt, SystemExit):
@@ -156,10 +156,10 @@ class LightReader(SensorReader):
 
     def measureLight(self):
         try:
-            while (True) :
-                #self.sensor.getLux()         #salvar aqui no banco a leitura
+            #while (True) :
+            while (self.event.isSet()):
                 value =  self.sensor.getLux()
-                self.saveData(value) 
+                self.saveData(value)          #salvar aqui no banco a leitura
                 print ("Light: " + value + " lx")
                 time.sleep(self.delay)
         except (KeyboardInterrupt, SystemExit):
@@ -168,7 +168,7 @@ class LightReader(SensorReader):
             traceback.print_exc() 
             print "saindo da thread"
 
-            
+
 class LDR(object):
     '''
     classdocs
@@ -221,3 +221,4 @@ class LDR(object):
         
     def __del__(self):
         """ We're no longer using the GPIO, so tell software we're done."""
+
