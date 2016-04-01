@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from reader import TemperatureReader
-
+import time
 
 
 tr = TemperatureReader()

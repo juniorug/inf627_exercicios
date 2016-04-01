@@ -6,11 +6,11 @@ import traceback
 import RPi.GPIO as GPIO, os
 from concretefactory.humiditySensorFactory import HumididtySensorFactory
 from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
-from humidityReader import HumidityReader
-from LightReader import LightReader
-from temperatureReader import TemperatureReader
+#from humidityReader import HumidityReader
+#from LightReader import LightReader
+#from temperatureReader import TemperatureReader
 from threading import Thread
-from models import SensorMesurement
+#from models import SensorMesurement
 
 
 class SensorReader(object):
@@ -40,13 +40,6 @@ class SensorReader(object):
         else:
             assert 0, "Bad sensor creation: " + sensorType
 
-    @abc.abstractmethod
-    def createSensor(sensorType):
-        """Retrieve data from the input source and return a Sensor object.
-        @param sensorType: The kind of sensor to be created
-        @type sensorType: String
-        """
-        pass
 
     @abc.abstractmethod
     def measure(self):
@@ -65,9 +58,10 @@ class SensorReader(object):
         self.threadSensor.release()
     
     def saveData(self, valuereaded = None):
-          sm = SensorMesurement(sensor_id = self.sensor_id, value = valuereaded)
-          sm.save()
-          
+          #sm = SensorMesurement(sensor_id = self.sensor_id, value = valuereaded)
+          #sm.save()
+          #print ("saving. should save in the database")
+          pass
           
 class TemperatureReader(SensorReader):
     '''
@@ -148,7 +142,7 @@ class LightReader(SensorReader):
     '''
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, sensorName = "LDR", delay = 5, sensor_id = None, sensor_id = None):
+    def __init__(self, sensorName = "LDR", delay = 5, sensor_id = None):
         '''
         Constructor
         '''
