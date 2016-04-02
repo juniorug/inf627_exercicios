@@ -1,46 +1,36 @@
-from django.shortcuts import render
-# from chartit import DataPool, Chart
-from .models import SensorMesurement
 import datetime
+import arrow
+from django.shortcuts import render
+from .models import SensorMesurement
 
 
 def dashboard(request):
-    # measurements = SensorMesurement.objects.filter(
-    #     datetime_measurement__gte=datetime.date.today()
-    # ).order_by("datetime_measurement")
+    measurements = SensorMesurement.objects.filter(
+        datetime_measurement__gte=datetime.date.today()
+    ).order_by("datetime_measurement")
 
-    # https://www.djangopackages.com/grids/g/charts/
+    testData = thirty_day_registrations()
+    return render(request, 'sensorDash/dashboard.html', {
+        'sensorchart': measurements,
+        '30_day_registrations': testData
+    })
 
-    # http://chartit.shutupandship.com/docs/#installation
-    # Step 1: Create a DataPool with the data we want to retrieve.
-    # weatherdata = \
-    #     DataPool(
-    #         series=[{'options': {
-    #             'source': SensorMesurement.objects.filter(
-    #                 datetime_measurement__gte=datetime.date.today()
-    #             ).order_by("datetime_measurement")},
-    #             'terms': [
-    #             'datetime_measurement',
-    #             'value']}
-    #         ])
 
-    # # Step 2: Create the Chart object
-    # cht = Chart(
-    #     datasource=weatherdata,
-    #     series_options=[{'options': {
-    #         'type': 'line',
-    #         'stacking': False},
-    #         'terms': {
-    #         'datetime_measurement': [
-    #             'value']
-    #     }}],
-    #     chart_options={'title': {
-    #         'text': 'Medida dos Sensores'},
-    #         'xAxis': {
-    #         'title': {
-    #             'text': 'Datetime da medição'}}})
+# def get_context_data(self, **kwargs):
+#     context = super(AnalyticsIndexView, self).get_context_data(**kwargs)
+#     context['30_day_registrations'] = self.thirty_day_registrations()
+#     return context
 
-    # Step 3: Send the chart object to the template.
-    # return render_to_response({'weatherchart': cht})
 
-    return render(request, 'sensorDash/dashboard.html', {'sensorchart': cht})
+def thirty_day_registrations():
+    final_data = []
+
+    date = arrow.now()
+    for day in range(1, 30):
+        date = date.replace(days=-1)
+        count = SensorMesurement.objects.filter(
+            datetime_measurement__gte=date.floor('day').datetime,
+            datetime_measurement__lte=date.ceil('day').datetime).count()
+        final_data.append(count)
+
+    return final_data
