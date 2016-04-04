@@ -13,10 +13,12 @@ class SensorFamily(models.Model):
 
 class Sensor(models.Model):
 
-    sensor_family_id = models.ForeignKey('SensorFamily')
-    sensor_type = models.CharField(max_length=45)
+    sensor_family = models.ForeignKey('SensorFamily')
+    sensor_type = models.CharField(max_length = 45)
     place = models.ForeignKey('Place')
-    status = models.CharField(max_length=45)
+    sampling_time = models.IntegerField(default = 1)
+    pin = models.IntegerField(default = 0)
+    status = models.CharField(max_length = 45)
 
     def __str__(self):
         return self.sensor_type + ' - ' + self.status
@@ -35,12 +37,20 @@ class Place(models.Model):
         return self.name
 
 
-class SensorMesurement(models.Model):
+class SensorMeasurement(models.Model):
 
-    sensor_id = models.ForeignKey('Sensor')
-    datetime_measurement = models.DateTimeField(auto_now=True)
+    sensor = models.ForeignKey('Sensor')
+    datetime_measurement = models.DateTimeField()
     value = models.CharField(max_length=45)
 
     def __str__(self):
         return self.place + ': ' + self.value\
             + ' at ' + self.datetime_measurement
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        self.datetime_measurement = timezone.now()
+        return super(User, self).save(*args, **kwargs)
+
+
+

@@ -1,7 +1,7 @@
 import datetime
 import arrow
 from django.shortcuts import render
-from .models import SensorMesurement
+from .models import SensorMeasurement
 
 
 def dashboard(request):
