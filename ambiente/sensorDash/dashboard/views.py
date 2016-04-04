@@ -5,7 +5,7 @@ from .models import SensorMeasurement
 
 
 def dashboard(request):
-    measurements = SensorMesurement.objects.filter(
+    measurements = SensorMeasurement.objects.filter(
         datetime_measurement__gte=datetime.date.today()
     ).order_by("datetime_measurement")
 
@@ -28,7 +28,7 @@ def thirty_day_registrations():
     date = arrow.now()
     for day in range(1, 30):
         date = date.replace(days=-1)
-        count = SensorMesurement.objects.filter(
+        count = SensorMeasurement.objects.filter(
             datetime_measurement__gte=date.floor('day').datetime,
             datetime_measurement__lte=date.ceil('day').datetime).count()
         final_data.append(count)
