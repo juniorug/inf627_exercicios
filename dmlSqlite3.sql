@@ -12,8 +12,8 @@ VALUES (1, 1, 1, 'DHT11Temperture', 4, 5, 'ON'),
        (3, 3, 1, 'LDR', 18, 5, 'ON');
 
 -- -----------------------------------------------------
--- select * from dashboard_sensor_family;
+-- select * from dashboard_sensorfamily;
 -- select * from dashboard_sensor;
 -- select * from dashboard_place;
--- select * from sensor_measurement;
+-- select * from dashboard_sensormeasurement;
 -- -----------------------------------------------------

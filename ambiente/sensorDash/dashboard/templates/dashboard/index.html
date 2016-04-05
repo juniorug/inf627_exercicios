@@ -1,15 +1,22 @@
 {% extends "admin/index.html" %}
 
 {% block extrahead %}
+{% load staticfiles %}
+
+<!--CSS-->
+<link rel="stylesheet" href="{% static "css/main.css" %}">
+
+<!--JS-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+<script src="{% static "js/legends.js" %}" type="text/javascript"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
     var data = {
         labels: ['1', '5', '10', '15', '20', '25', '30'],
         datasets: [
             {
-                label: "Site Registrations in the Last 30 Days",
+                label: "Temperatura",
                 fillColor: "rgba(220,220,220,0.2)",
                 strokeColor: "rgba(220,220,220,1)",
                 pointColor: "rgba(220,220,220,1)",
@@ -17,18 +24,60 @@ $( document ).ready(function() {
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: "rgba(220,220,220,1)",
                 data: {{ 30_day_registrations }}
+            },
+            {
+                label: "Humidade",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
             }
         ]
     };
     var ctx = document.getElementById("myChart").getContext("2d");
     var myLineChart = new Chart(ctx).Line(data);
+    legend(document.getElementById('legendDiv'), data);
+
+    var dataLuminosidade = {
+        labels: ['1', '5', '10', '15', '20', '25', '30'],
+        datasets: [
+            {
+                label: "Luminosidade",
+                fillColor: "rgba(69,33,15,0.2)",
+                strokeColor: "rgba(69,33,15,1)",
+                pointColor: "rgba(69,33,15,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(69,33,15,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            }
+        ]
+    };
+    var ctx2 = document.getElementById("luminosityChart").getContext("2d");
+    var myLineChart2 = new Chart(ctx2).Line(dataLuminosidade);
+    legend(document.getElementById('legendDiv2'), dataLuminosidade);
+
+
+
+
 });
 </script>
 {% endblock %}
 
 {% block content %}
 <h1>Dashboard</h1>
-<h2>Temperatura por Tempo</h2>
-<canvas id="myChart" width="500" height="300"></canvas>
+<div class="divleft"> 
+    <h2>Temperatura e Umidade</h2>
+    <canvas id="myChart" width="500" height="300"></canvas>
+    <div id="legendDiv"></div>
+    <h2>Luminosidade</h2>
+    <canvas id="luminosityChart" width="500" height="300"></canvas>
+    <div id="legendDiv2"></div>
+</div> 
 {% endblock %}
+
+
 
