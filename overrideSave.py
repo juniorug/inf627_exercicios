@@ -8,3 +8,4 @@ def save(self,*args,**kwargs):
     reader = SensorReader.createReader(readerType, self.sensor_type, self.sampling_time, self.id)
 
 
+

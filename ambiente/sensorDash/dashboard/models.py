@@ -44,8 +44,8 @@ class SensorMeasurement(models.Model):
     value = models.CharField(max_length=45)
 
     def __str__(self):
-        return self.place + ': ' + self.value\
-            + ' at ' + self.datetime_measurement
+        return unicode(self.value + ': ' + self.value\
+            + ' at ' + self.datetime_measurement)
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''

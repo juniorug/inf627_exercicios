@@ -1,0 +1,12 @@
+[2016-04-05 15:59:38] WARNING [py.warnings.to_python:1393] /usr/local/lib/python2.7/dist-packages/django/db/models/fields/__init__.py:1393: RuntimeWarning: DateTimeField SensorMeasurement.datetime_measurement received a naive datetime (2016-04-05 00:00:00) while time zone support is active.
+  RuntimeWarning)
+
+[2016-04-05 15:59:38] WARNING [py.warnings.to_python:1393] /usr/local/lib/python2.7/dist-packages/django/db/models/fields/__init__.py:1393: RuntimeWarning: DateTimeField SensorMeasurement.datetime_measurement received a naive datetime (2016-04-04 00:00:00) while time zone support is active.
+  RuntimeWarning)
+
+[2016-04-05 16:05:40] WARNING [py.warnings.to_python:1393] /usr/local/lib/python2.7/dist-packages/django/db/models/fields/__init__.py:1393: RuntimeWarning: DateTimeField SensorMeasurement.datetime_measurement received a naive datetime (2016-04-05 00:00:00) while time zone support is active.
+  RuntimeWarning)
+
+[2016-04-05 16:05:40] WARNING [py.warnings.to_python:1393] /usr/local/lib/python2.7/dist-packages/django/db/models/fields/__init__.py:1393: RuntimeWarning: DateTimeField SensorMeasurement.datetime_measurement received a naive datetime (2016-04-04 00:00:00) while time zone support is active.
+  RuntimeWarning)
+
