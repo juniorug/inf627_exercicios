@@ -18,13 +18,13 @@ $( document ).ready(function() {
         datasets: [
             {
                 label: "Temperatura",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: "rgba(255,0,0,0.2)",
+                strokeColor: "rgba(255,0,0,1)",
+                pointColor: "rgba(255,0,0,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: {{ 30_day_registrations }}
+                pointHighlightStroke: "rgba(255,0,0,1)",
+                data: {{ temperature_values }}
             },
             {
                 label: "Umidade",
@@ -38,6 +38,11 @@ $( document ).ready(function() {
             }
         ]
     };
+    function decodeHtml(html) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
     
     var ctx = document.getElementById("myChart").getContext("2d");
     var myLineChart = new Chart(ctx).Line(data);
@@ -48,12 +53,12 @@ $( document ).ready(function() {
         datasets: [
             {
                 label: "Luminosidade",
-                fillColor: "rgba(69,33,15,0.2)",
-                strokeColor: "rgba(69,33,15,1)",
-                pointColor: "rgba(69,33,15,1)",
+                fillColor: "rgba(255,128,0,0.2)",
+                strokeColor: "rgba(255,128,0,1)",
+                pointColor: "rgba(255,128,0,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(69,33,15,1)",
+                pointHighlightStroke: "rgba(255,128,0,1)",
                 data: [65, 59, 80, 81, 56, 55, 40]
             }
         ]
@@ -80,6 +85,13 @@ $( document ).ready(function() {
     <div id="legendDiv2"></div>
 </div> 
  <div id="chartjs-tooltip"></div>
+ 
+{% with temperature_values as list %}
+    {% for i in temperature_values.split %}
+        {{ i }}<br>
+    {% endfor %}
+{% endwith %}
+ 
 {% endblock %}
 
 
