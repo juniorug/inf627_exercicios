@@ -1,4 +1,6 @@
+from datetime import date, datetime
 from django.db import models
+from django.utils.translation import gettext as _
 # from django.utils import timezone
 
 
@@ -40,11 +42,12 @@ class Place(models.Model):
 class SensorMeasurement(models.Model):
 
     sensor = models.ForeignKey('Sensor')
-    datetime_measurement = models.DateTimeField()
+    date_measurement = models.DateField(_("Date"), default= date.today)
+    time_measurement = models.TimeField(blank=True, null=True)
     value = models.CharField(max_length=45)
 
     def __str__(self):
-        return self.value + ' at ' + unicode(self.datetime_measurement)
+        return self.value + ' at ' + unicode(self.date_measurement) + ' ' + unicode(self.time_measurement)
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''

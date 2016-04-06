@@ -16,4 +16,8 @@ VALUES (1, 1, 1, 'DHT11Temperture', 4, 5, 'ON'),
 -- select * from dashboard_sensor;
 -- select * from dashboard_place;
 -- select * from dashboard_sensormeasurement;
+-- select * from dashboard_sensormeasurement order by id asc;
+-- 
+-- update dashboard_sensormeasurement set date_measurement = date('now') where id > 0
+-- update dashboard_sensormeasurement set date_measurement = date('now' , '-1 day') where id > 0
 -- -----------------------------------------------------
