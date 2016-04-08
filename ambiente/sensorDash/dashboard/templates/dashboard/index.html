@@ -4,7 +4,26 @@
 {% load staticfiles %}
 
 <!--CSS-->
+
+
+<!-- timepicker-->
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js"></script>
+
+<script src="{% static 'js/timepickerpop.js' %}" type="text/javascript"></script>
+
+<script type="text/javascript">
+    angular.module('timepickerDemo', [ 'timepickerPop' ]).controller('DemoCtrl', function($scope) {
+          $scope.initialTime = new Date();
+          $scope.finalTime = new Date();
+          $scope.showMeridian = false;
+    });
+</script>
 
 <!--JS-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
@@ -12,7 +31,7 @@
 <script src="{% static 'js/legends.js' %}" type="text/javascript"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
-   
+
     var chartoptions =
     {
         customTooltips: function ( tooltip )
@@ -117,10 +136,11 @@ $( document ).ready(function() {
         }
     });
     ctx = document.getElementById("luminosityChart").getContext("2d");
-    myLineChart = new Chart(ctx).Line(dataLuminosidade, chartoptions);
+    myLineChart = new Chart(ctx).Line(dataLuminosidade, {animationEasing: "linear"});
     legend(document.getElementById('legendDiv'), data); 
     legend(document.getElementById('legendDiv2'), dataLuminosidade);
-
+    document.getElementById('initialDate').valueAsDate = new Date();
+    document.getElementById('finalDate').valueAsDate = new Date();
 });
 </script>
 {% endblock %}
@@ -135,8 +155,48 @@ $( document ).ready(function() {
     <h2>Luminosidade</h2>
     <canvas id="luminosityChart" width="500" height="300"></canvas>
     <div id="legendDiv2"></div>
-</div> 
-
+</div>
+<div class="clear"></div>
+<div class="divright divForm">
+    <div ng-app="timepickerDemo" ng-controller='DemoCtrl'>
+        <table border="0">
+            <tr>
+                <td>
+                    <h4>Data inicial</h4>
+                    <input type="date" name="initialDate" id="initialDate"/><br/>
+                </td>
+                <td>
+                    <div class='col-md-6 col-md-offset-3'>
+                      <h4>Hora inicial</h4>
+                      <timepicker-pop input-time="initialTime" class="input-group"
+                        show-meridian='showMeridian'>
+                      </timepicker-pop>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Data final</h4>
+                    <input type="date" name="finalDate" id="finalDate"/><br/>
+                </td>
+                <td>
+                    <div class='col-md-6 col-md-offset-3'>
+                      <h4>Hora final</h4>
+                      <timepicker-pop input-time="finalTime" class="input-group"
+                        show-meridian='showMeridian'>
+                      </timepicker-pop>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="divright" style="margin-right: -28px; margin-top: 15px;">
+                    <button type="button" class="btn btn-primary">Filtrar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 {% endblock %}
 
 
