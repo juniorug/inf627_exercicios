@@ -3,9 +3,15 @@
 from reader import SensorReader
 import time
 
-ht = SensorReader.createReader('Temperature', 'DHT11Temperature', 2, 1)
-hh = SensorReader.createReader('Humidity','DHT11Humidity', 2, 2)
-hl = SensorReader.createReader('Luminosity','LDR', 2, 3) 
+delay = 2
+temp_sensor_id = 1
+hum_sensor_id = 2
+light_sensor_id = 3
+
+ht = SensorReader.createReader('Temperature', 'DHT11Temperature', delay, temp_sensor_id)
+hh = SensorReader.createReader('Humidity','DHT11Humidity', delay, hum_sensor_id)
+hl = SensorReader.createReader('Luminosity','LDR', delay, light_sensor_id)
+
 try:
     ht.startThread()
     hh.startThread()

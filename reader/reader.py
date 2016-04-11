@@ -6,6 +6,7 @@ import traceback
 import RPi.GPIO as GPIO, os
 from concretefactory.humiditySensorFactory import HumiditySensorFactory
 from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
+from datetime import date,datetime,timedelta
 from threading import *
 #from models import SensorMesurement
 
@@ -26,6 +27,7 @@ class SensorReader(object):
         self.sensor = sensor
         self.delay = delay
         self.sensor_id = sensor_id
+        self.filename = ""
 
     @staticmethod
     def createReader(readerType, sensorType, delay, sensor_id):
@@ -59,10 +61,19 @@ class SensorReader(object):
         self.threadSensor.start()
     
     def saveData(self, valuereaded = None):
-          #sm = SensorMesurement(sensor_id = self.sensor_id, value = valuereaded)
-          #sm.save()
-          #print ("saving. should save in the database")
-          pass
+        #sm = SensorMesurement(sensor_id = self.sensor_id, value = valuereaded)
+        #sm.save()
+        #print ("saving. should save in the database")
+        #pass
+        if (valuereaded is not None):
+            str_insert = """INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) 
+                         VALUES ({}, {}, '{}', '{}');""".format(self.sensor_id, valuereaded, date.today(),
+                         datetime.now().strftime('%H:%M:%S'))
+            
+            file = open(self.filename, "a+")
+            file.write(str_insert)
+            file.close()        
+   
           
 class TemperatureReader(SensorReader):
     '''
@@ -79,6 +90,7 @@ class TemperatureReader(SensorReader):
         self.sensor.changeSetup(4)
         # self.threadSensor = Thread(target = self.measureTemperature, args=(self.sensor,delay))
         self.threadSensor.daemon = True
+        self.filename = "temperature.txt"
 
     def measure(self):
         self.measureTemperature()
@@ -113,6 +125,7 @@ class HumidityReader(SensorReader):
         self.sensor.changeSetup(4)
         # self.threadSensor = Thread(target = self.measureHumidity, args=(self.sensor, delay))
         self.threadSensor.daemon = True
+        self.filename = "humidity.txt"
         
     def measure(self):
         self.measureHumidity()
@@ -150,6 +163,7 @@ class LightReader(SensorReader):
         self.sensor = LDR()
         # self.threadSensor = Thread(target = self.measureLight, args=(self.sensor, delay))
         self.threadSensor.daemon = True
+        self.filename = "light.txt"
     
     def measure(self):
         self.measureLight()
