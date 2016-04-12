@@ -66,9 +66,7 @@ class SensorReader(object):
         #print ("saving. should save in the database")
         #pass
         if (valuereaded is not None):
-            str_insert = """INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) 
-                         VALUES ({}, {}, '{}', '{}');""".format(self.sensor_id, valuereaded, date.today(),
-                         datetime.now().strftime('%H:%M:%S'))
+            str_insert = "INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) VALUES ({}, '{}', '{}', '{}');\n".format(self.sensor_id, valuereaded, date.today(), datetime.now().strftime('%H:%M:%S'))
             
             file = open(self.filename, "a+")
             file.write(str_insert)
