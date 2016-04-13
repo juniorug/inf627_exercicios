@@ -30,117 +30,150 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
 <script src="{% static 'js/legends.js' %}" type="text/javascript"></script>
 <script type="text/javascript">
-$( document ).ready(function() {
 
-    var chartoptions =
-    {
-        customTooltips: function ( tooltip )
+function printCharts(value) {
+    $('#myChart').html('<canvas id="myChart" width="500" height="300"></canvas>');
+    $('#luminosityChart').html('<canvas id="luminosityChart" width="500" height="300"></canvas>');
+
+    temperature_values = null;
+    humidity_values = null;
+    luminosity_values = null;
+    chart_labels = null;
+
+    $.get("/dashboard_data/", function(data, status){
+        console.log(data);
+        chart_labels = data.chart_labels;
+        temperature_values = data.temperature_values;
+        humidity_values = data.humidity_values;
+        luminosity_values = data.luminosity_values;
+
+        console.log(temperature_values);
+        console.log(humidity_values);
+        console.log(luminosity_values);
+        console.log(chart_labels);
+
+        var chartoptions =
         {
-            var tooltipEl = $( "#chartjs-tooltip" );
-            if ( !tooltip )
+            customTooltips: function ( tooltip )
             {
+                var tooltipEl = $( "#chartjs-tooltip" );
+                if ( !tooltip )
+                {
+                    tooltipEl.css( {
+                        opacity: 0
+                    } );
+                    return;
+                }
+
+                tooltipEl.removeClass( 'above below' );
+                tooltipEl.addClass( tooltip.yAlign );
+
+                // split out the label and value and make your own tooltip here
+                var parts = tooltip.text.split( ":" );
+                var innerHtml = '<span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
+                tooltipEl.html( innerHtml );
+
                 tooltipEl.css( {
-                    opacity: 0
+                    opacity: 1,
+                    left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+                    top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
+                    fontFamily: tooltip.fontFamily,
+                    fontSize: tooltip.fontSize,
+                    fontStyle: tooltip.fontStyle
                 } );
-                return;
             }
-
-            tooltipEl.removeClass( 'above below' );
-            tooltipEl.addClass( tooltip.yAlign );
-
-            // split out the label and value and make your own tooltip here
-            var parts = tooltip.text.split( ":" );
-            var innerHtml = '<span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
-            tooltipEl.html( innerHtml );
-
-            tooltipEl.css( {
-                opacity: 1,
-                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
-                fontFamily: tooltip.fontFamily,
-                fontSize: tooltip.fontSize,
-                fontStyle: tooltip.fontStyle
-            } );
         }
-    }
 
-    var data = {
-        labels: {{ chart_labels | safe }},
-        datasets: [
-            {
-                label: "Temperatura",
-                fillColor: "rgba(255,0,0,0.2)",
-                strokeColor: "rgba(255,0,0,1)",
-                pointColor: "rgba(255,0,0,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(255,0,0,1)",
-                data: {{ temperature_values | safe  }}
-            },
-            {
-                label: "Umidade",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
-                data: {{ humidity_values | safe  }}
-            }
-        ]
-    };
+        var data = {
+            labels: chart_labels,
+            // labels: {{ chart_labels | safe }},
+            datasets: [
+                {
+                    label: "Temperatura",
+                    fillColor: "rgba(255,0,0,0.2)",
+                    strokeColor: "rgba(255,0,0,1)",
+                    pointColor: "rgba(255,0,0,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(255,0,0,1)",
+                    data: temperature_values
+                    // data: {{ temperature_values | safe  }}
+                },
+                {
+                    label: "Umidade",
+                    fillColor: "rgba(151,187,205,0.2)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: humidity_values
+                    // data: {{ humidity_values | safe  }}
+                }
+            ]
+        };
 
-    var dataLuminosidade = {
-        labels: {{ chart_labels | safe }},
-        datasets: [
-            {
-                label: "Luminosidade",
-                fillColor: "rgba(255,128,0,0.2)",
-                strokeColor: "rgba(255,128,0,1)",
-                pointColor: "rgba(255,128,0,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(255,128,0,1)",
-                data: {{ luminosity_values | safe  }}
-            }
-        ]
-    };
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myLineChart = new Chart(ctx).Line(data, {
-        customTooltips: function (tooltip) {
-            var tooltipEl = $('#chartjs-tooltip');
-            
-            if (!tooltip) {
+        var dataLuminosidade = {
+            labels: {{ chart_labels | safe }},
+            datasets: [
+                {
+                    label: "Luminosidade",
+                    fillColor: "rgba(255,128,0,0.2)",
+                    strokeColor: "rgba(255,128,0,1)",
+                    pointColor: "rgba(255,128,0,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(255,128,0,1)",
+                    data: luminosity_values
+                    // data: {{ luminosity_values | safe  }}
+                }
+            ]
+        };
+        var ctx = document.getElementById("myChart").getContext("2d");
+        var myLineChart = new Chart(ctx).Line(data, {
+            customTooltips: function (tooltip) {
+                var tooltipEl = $('#chartjs-tooltip');
+                
+                if (!tooltip) {
+                    tooltipEl.css({
+                        opacity: 0
+                    });
+                    return;
+                }
+                
+                tooltipEl.removeClass('above below');
+                tooltipEl.addClass(tooltip.yAlign);
+                
+                // split out the label and value and make your own tooltip here
+                var parts = tooltip.text.split(":");
+                var innerHtml = '<span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
+                tooltipEl.html(innerHtml);
+                
                 tooltipEl.css({
-                    opacity: 0
+                    opacity: 1,
+                    left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+                    top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
+                    fontFamily: tooltip.fontFamily,
+                    fontSize: tooltip.fontSize,
+                    fontStyle: tooltip.fontStyle,
                 });
-                return;
             }
-            
-            tooltipEl.removeClass('above below');
-            tooltipEl.addClass(tooltip.yAlign);
-            
-            // split out the label and value and make your own tooltip here
-            var parts = tooltip.text.split(":");
-            var innerHtml = '<span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
-            tooltipEl.html(innerHtml);
-            
-            tooltipEl.css({
-                opacity: 1,
-                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
-                fontFamily: tooltip.fontFamily,
-                fontSize: tooltip.fontSize,
-                fontStyle: tooltip.fontStyle,
-            });
-        }
+        });
+        ctx = document.getElementById("luminosityChart").getContext("2d");
+        myLineChart = new Chart(ctx).Line(dataLuminosidade, {animationEasing: "linear"});
+        legend(document.getElementById('legendDiv'), data); 
+        legend(document.getElementById('legendDiv2'), dataLuminosidade);
+        document.getElementById('initialDate').valueAsDate = new Date();
+        document.getElementById('finalDate').valueAsDate = new Date();
+
+        setTimeout (function() { printCharts(value - 1); }, 10000);
     });
-    ctx = document.getElementById("luminosityChart").getContext("2d");
-    myLineChart = new Chart(ctx).Line(dataLuminosidade, {animationEasing: "linear"});
-    legend(document.getElementById('legendDiv'), data); 
-    legend(document.getElementById('legendDiv2'), dataLuminosidade);
-    document.getElementById('initialDate').valueAsDate = new Date();
-    document.getElementById('finalDate').valueAsDate = new Date();
+}
+
+$( document ).ready(function() {
+    setTimeout(function(){
+        printCharts(1000)
+    }, 1000);
 });
 </script>
 {% endblock %}
@@ -149,7 +182,7 @@ $( document ).ready(function() {
 <h1>Dashboard</h1>
 <div class="divleft"> 
     <h2>Temperatura e Umidade</h2>
-    <canvas id="myChart" width="500" height="300"></canvas> 
+    <canvas id="myChart" width="500" height="300"></canvas>
     <div id="chartjs-tooltip"></div>  
     <div id="legendDiv"></div>
     <h2>Luminosidade</h2>

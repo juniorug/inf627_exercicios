@@ -1,36 +1,53 @@
 import arrow
 import logging
-import pdb 
+import pdb
 import traceback
 from datetime import date, timedelta
 from django.shortcuts import render
 from .models import SensorMeasurement
 from time import strptime
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
-def dashboard(request):
-    measurements = SensorMeasurement.objects.filter(
-        date_measurement__gte=date.today()- timedelta(days = 2)
-    ).order_by("date_measurement")
 
-
-    '''temperature_values = SensorMeasurement.objects.filter(
-        date_measurement__gte=date.today() - timedelta(days = 2)
-    ).filter(sensor_id=1).values_list('value', flat=True).order_by('value').distinct() '''
-    
+def dashboardData(request):
     sense_values = []
-    for i in range (0,3): 
+    for i in range(0, 3):
 
         values_measured = SensorMeasurement.objects.filter(
-            date_measurement__day=date.today().day 
-        ).filter(sensor_id = (i + 1)).values_list('value', 'time_measurement').order_by('time_measurement').distinct()[:7] 
+            date_measurement__day=date.today().day
+        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement').order_by('time_measurement').distinct()[:7]
         sense_values.append(values_measured)
-        
 
     datetime_values = SensorMeasurement.objects.filter(
-        date_measurement__gte=date.today() - timedelta(days = 2)
-    ).filter(sensor_id=1).values_list('date_measurement', flat=True).order_by('date_measurement').distinct()     
+        date_measurement__gte=date.today() - timedelta(days=2)
+    ).filter(sensor_id=1).values_list('date_measurement', flat=True).order_by('date_measurement').distinct()
+
+    tuple_list_temperature_value = getListsFromToupleLists(sense_values[0])
+    tuple_list_humidity_value = getListsFromToupleLists(sense_values[1])
+    tuple_list_luminosity_value = getListsFromToupleLists(sense_values[2])
+
+    return JsonResponse({
+        'chart_labels': tuple_list_temperature_value[1],
+        'temperature_values': tuple_list_temperature_value[0],
+        'humidity_values': tuple_list_humidity_value[0],
+        'luminosity_values': tuple_list_luminosity_value[0]
+    })
+
+
+def dashboard(request):
+    sense_values = []
+    for i in range(0, 3):
+
+        values_measured = SensorMeasurement.objects.filter(
+            date_measurement__day=date.today().day
+        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement').order_by('time_measurement').distinct()[:7]
+        sense_values.append(values_measured)
+
+    datetime_values = SensorMeasurement.objects.filter(
+        date_measurement__gte=date.today() - timedelta(days=2)
+    ).filter(sensor_id=1).values_list('date_measurement', flat=True).order_by('date_measurement').distinct()
 
     tuple_list_temperature_value = getListsFromToupleLists(sense_values[0])
     tuple_list_humidity_value = getListsFromToupleLists(sense_values[1])
@@ -43,27 +60,31 @@ def dashboard(request):
         'luminosity_values': tuple_list_luminosity_value[0]
     })
 
-        
+
 def getListsFromToupleLists(toupleList):
     list_keys = []
     list_values = []
     for tuple in toupleList:
-        list_keys.append(getStringValue(tuple[0]))         
+        list_keys.append(getStringValue(tuple[0]))
         list_values.append(getStringTimeValue(tuple[1]))
-    print (type(list_keys))
+    print(type(list_keys))
     print '[%s]' % ', '.join(map(str,  list_keys))
-    print (type(list_values))
+    print(type(list_values))
     print '[%s]' % ', '.join(map(str,  list_values))
     return (list_keys, list_values)
+
 
 def getStringValue(value):
     return value.encode("utf8")
 
+
 def getIntValue(value):
     return int(value.encode("utf8"))
 
+
 def getStringDateValue(dateValue):
-    return  dateValue.strftime("%d/%m/%Y").encode("utf8")
+    return dateValue.strftime("%d/%m/%Y").encode("utf8")
+
 
 def getStringTimeValue(timeValue):
     return timeValue.strftime("%H:%M:%S").encode("utf8")
