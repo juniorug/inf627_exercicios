@@ -17,7 +17,7 @@
 
 .divForm {
     width: 300px;
-    margin-top: -875px;
+    margin-top: -1285px;
     padding-left: 500px;
 }
 
@@ -56,8 +56,10 @@ input[type="text"]:focus {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #f5dd5d;
  }
 #content-related{
-    margin-top: -600px;
+    margin-top: -1045px;
+    margin-right: -365px;
 } 
+/*
 #chartjs-tooltip {
      opacity: 0;
      position: absolute;
@@ -70,4 +72,4 @@ input[type="text"]:focus {
      pointer-events: none;
      -webkit-transform: translate(-50%, 0);
      transform: translate(-50%, 0);
- }
+ }*/
