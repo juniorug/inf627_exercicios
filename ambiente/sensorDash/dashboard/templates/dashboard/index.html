@@ -40,17 +40,33 @@ function printCharts(value) {
     luminosity_values = null;
     chart_labels = null;
 
-    $.get("/dashboard_data/", function(data, status){
-        console.log(data);
+    initDate = $("#initialDate").val();
+    initTime = $("#initialTime").val();
+    endDate = $("#finalDate").val();
+    endTime = $("#finalTime").val();
+
+    getUrl = "/dashboard_data/";
+
+    console.log(initDate);
+    console.log(initTime);
+    console.log(endDate);
+    console.log(endTime);
+
+    if (initDate && initTime && endDate && endTime) {
+        getUrl += "?initialDate=" + initDate + "&initialTime=" + initTime + "&finalDate=" + endDate + "&finalTime=" + endTime;
+    }
+
+    $.get(getUrl, function(data, status){
+        // console.log(data);
         chart_labels = data.chart_labels;
         temperature_values = data.temperature_values;
         humidity_values = data.humidity_values;
         luminosity_values = data.luminosity_values;
 
-        console.log(temperature_values);
-        console.log(humidity_values);
-        console.log(luminosity_values);
-        console.log(chart_labels);
+        // console.log(temperature_values);
+        // console.log(humidity_values);
+        // console.log(luminosity_values);
+        // console.log(chart_labels);
         
         
         var chartoptions =
@@ -257,6 +273,3 @@ $( document ).ready(function() {
     </form>
 </div>
 {% endblock %}
-
-
-
