@@ -16,7 +16,7 @@ def dashboardData(request):
     sense_values = []
     if request.method == "GET":
         print request.GET
-        print request.GET['initialDate']
+
     for i in range(0, 3):
 
         values_measured = SensorMeasurement.objects.filter(
