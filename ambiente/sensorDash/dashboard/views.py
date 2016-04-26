@@ -16,7 +16,7 @@ def dashboardData(request):
     sense_values = []
     if request.method == "GET":
         print request.GET
-        if request.GET.len() < 2:
+        if len(request.GET) == 4:
             print request.GET['initialDate']
 
     for i in range(0, 3):
