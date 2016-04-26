@@ -57,7 +57,7 @@ class SensorMeasurement(models.Model):
         return self.value + ' at ' + unicode(self.date_measurement)\
             + ' ' + unicode(self.time_measurement)
 
-    def save(self, *args, **kwargs):
-        ''' On save, update timestamps '''
-        self.datetime_measurement = timezone.now()
-        return super(User, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     ''' On save, update timestamps '''
+    #     self.datetime_measurement = timezone.now()
+    #     return super(User, self).save(*args, **kwargs)
