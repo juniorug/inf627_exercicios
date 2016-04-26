@@ -1,82 +1,3 @@
-from django.db import models
-from django.utils.translation import gettext as _
-
-import abc
-import time
-import traceback
-import RPi.GPIO as GPIO, os
-from concretefactory.humiditySensorFactory import HumiditySensorFactory
-from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
-from datetime import date,datetime,timedelta
-from threading import *
-
-
-# from django.utils import timezone
-
-#from django.conf import settings
-#if not settings.configured:
-#    settings.configure("sensorDash.settings", DEBUG=True)
-
-
-class SensorFamily(models.Model):
-
-    family_name = models.CharField(max_length=45, blank=True)
-    default_measure_unit = models.CharField(max_length=45, blank=True)
-
-    def __str__(self):
-        return self.family_name
-
-
-class Sensor(models.Model):
-
-    sensor_family = models.ForeignKey('SensorFamily')
-    sensor_type = models.CharField(max_length=45)
-    place = models.ForeignKey('Place')
-    sampling_time = models.IntegerField(default=1)
-    pin = models.IntegerField(default=0)
-    status = models.CharField(max_length=45)
-
-    def __str__(self):
-        return self.sensor_type + ' - ' + self.status
-
-    def save(self, *args, **kwargs):
-        super(Sensor, self).save(*args, **kwargs)
-
-        # Identify the sensor and call it's reader thread
-        print self.sensor_family_id
-        print self.sensor_family
-
-        readerType = SensorFamily.objects.get(
-            id=self.sensor_family_id).family_name
-        reader = SensorReader.createReader(
-            readerType, self.sensor_type, self.sampling_time, self.id)
-        reader.startThread()
-
-
-class Place(models.Model):
-
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
-class SensorMeasurement(models.Model):
-
-    sensor = models.ForeignKey('Sensor')
-    date_measurement = models.DateField(_("Date"), default=date.today)
-    time_measurement = models.TimeField(blank=True, null=True)
-    value = models.CharField(max_length=45)
-
-    def __str__(self):
-        return self.value + ' at ' + unicode(self.date_measurement)\
-            + ' ' + unicode(self.time_measurement)
-
-    # def save(self, *args, **kwargs):
-    #     ''' On save, update timestamps '''
-    #     self.datetime_measurement = timezone.now()
-    #     return super(User, self).save(*args, **kwargs)
 #!/usr/bin/env python
 
 import abc
@@ -87,10 +8,7 @@ from concretefactory.humiditySensorFactory import HumiditySensorFactory
 from concretefactory.temperatureSensorFactory import TemperatureSensorFactory
 from datetime import date,datetime,timedelta
 from threading import *
-from models import SensorMeasurement
-
-#from models import SensorMesurement
-
+from dashboard.models import SensorMeasurement
 
 
 class SensorReader(object):
@@ -115,6 +33,10 @@ class SensorReader(object):
     def createReader(readerType, sensorType, delay, sensor_id):
 
         if (readerType == 'Temperature'):
+            #print("type: " + sensorType +  " delay: " + delay + " id: " + sensor_id)
+            print sensorType
+            print delay
+            print sensor_id 
             return TemperatureReader(sensorType, delay, sensor_id)
         elif(readerType == 'Humidity'):
             return HumidityReader(sensorType, delay, sensor_id)
@@ -148,14 +70,9 @@ class SensorReader(object):
         #print ("saving. should save in the database")
         #pass
         if (valuereaded is not None):
-
             sm = SensorMeasurement(value = valuereaded, sensor_id = self.sensor_id, date_measurement = date.today(),time_measurement = datetime.now().strftime('%H:%M:%S'))
             sm.save()
-            #str_insert = "INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) VALUES ({}, '{}', '{}', '{}');\n".format(self.sensor_id, valuereaded, date.today(), datetime.now().strftime('%H:%M:%S'))
-            
-            #file = open(self.filename, "a+")
-            #file.write(str_insert)
-            #file.close()
+            print ("saving in the database..." + sm) 
    
           
 class TemperatureReader(SensorReader):
@@ -318,5 +235,4 @@ class LDR(object):
         
     def __del__(self):
         """ We're no longer using the GPIO, so tell software we're done."""
-
 

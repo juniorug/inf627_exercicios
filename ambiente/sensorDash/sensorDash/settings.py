@@ -49,6 +49,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'executestart',
 ]
 
 ROOT_URLCONF = 'sensorDash.urls'
@@ -135,6 +136,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_INDEX_TABLESPACE = ''
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

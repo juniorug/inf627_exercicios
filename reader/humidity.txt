@@ -1,0 +1,2 @@
+INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) VALUES (2, '34', '2016-04-17', '13:52:01');
+INSERT INTO dashboard_sensormeasurement (sensor_id,value, date_measurement,time_measurement) VALUES (2, '34', '2016-04-17', '13:53:03');
