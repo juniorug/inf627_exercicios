@@ -1,11 +1,12 @@
-import arrow
+# import arrow
 import logging
-import pdb
-import traceback
+# import pdb
+# import traceback
 from datetime import date, timedelta
 from django.shortcuts import render
 from .models import SensorMeasurement
-from time import strptime
+from .forms import DateRangeForm
+# from time import strptime
 from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
@@ -17,12 +18,9 @@ def dashboardData(request):
 
         values_measured = SensorMeasurement.objects.filter(
             date_measurement__day=date.today().day
-        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement').order_by('time_measurement').distinct()[:7]
+        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement')\
+            .order_by('time_measurement').distinct()[:7]
         sense_values.append(values_measured)
-
-    datetime_values = SensorMeasurement.objects.filter(
-        date_measurement__gte=date.today() - timedelta(days=2)
-    ).filter(sensor_id=1).values_list('date_measurement', flat=True).order_by('date_measurement').distinct()
 
     tuple_list_temperature_value = getListsFromToupleLists(sense_values[0])
     tuple_list_humidity_value = getListsFromToupleLists(sense_values[1])
@@ -38,16 +36,16 @@ def dashboardData(request):
 
 def dashboard(request):
     sense_values = []
+    if request.method == "POST":
+        print request.POST
+
     for i in range(0, 3):
 
         values_measured = SensorMeasurement.objects.filter(
             date_measurement__day=date.today().day
-        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement').order_by('time_measurement').distinct()[:7]
+        ).filter(sensor_id=(i + 1)).values_list('value', 'time_measurement')\
+            .order_by('time_measurement').distinct()[:7]
         sense_values.append(values_measured)
-
-    datetime_values = SensorMeasurement.objects.filter(
-        date_measurement__gte=date.today() - timedelta(days=2)
-    ).filter(sensor_id=1).values_list('date_measurement', flat=True).order_by('date_measurement').distinct()
 
     tuple_list_temperature_value = getListsFromToupleLists(sense_values[0])
     tuple_list_humidity_value = getListsFromToupleLists(sense_values[1])
