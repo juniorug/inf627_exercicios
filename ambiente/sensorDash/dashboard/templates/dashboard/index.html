@@ -213,44 +213,46 @@ $( document ).ready(function() {
 </div>
 <div class="clear"></div>
 <div class="divright divForm">
-    <div ng-app="timepickerDemo" ng-controller='DemoCtrl'>
-        <table border="0">
-            <tr>
-                <td>
-                    <h4>Data inicial</h4>
-                    <input type="date" name="initialDate" id="initialDate"/><br/>
-                </td>
-                <td>
-                    <div class='col-md-6 col-md-offset-3'>
-                      <h4>Hora inicial</h4>
-                      <timepicker-pop input-time="initialTime" class="input-group"
-                        show-meridian='showMeridian'>
-                      </timepicker-pop>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h4>Data final</h4>
-                    <input type="date" name="finalDate" id="finalDate"/><br/>
-                </td>
-                <td>
-                    <div class='col-md-6 col-md-offset-3'>
-                      <h4>Hora final</h4>
-                      <timepicker-pop input-time="finalTime" class="input-group"
-                        show-meridian='showMeridian'>
-                      </timepicker-pop>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="divright" style="margin-right: -28px; margin-top: 15px;">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <form method="POST" class="post-form">{% csrf_token %}
+        <div ng-app="timepickerDemo" ng-controller='DemoCtrl'>
+            <table border="0">
+                <tr>
+                    <td>
+                        <h4>Data inicial</h4>
+                        <input type="date" name="initialDate" id="initialDate"/><br/>
+                    </td>
+                    <td>
+                        <div class='col-md-6 col-md-offset-3'>
+                          <h4>Hora inicial</h4>
+                          <timepicker-pop input-time="initialTime" class="input-group"
+                            show-meridian='showMeridian'>
+                          </timepicker-pop>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>Data final</h4>
+                        <input type="date" name="finalDate" id="finalDate"/><br/>
+                    </td>
+                    <td>
+                        <div class='col-md-6 col-md-offset-3'>
+                          <h4>Hora final</h4>
+                          <timepicker-pop input-time="finalTime" class="input-group"
+                            show-meridian='showMeridian'>
+                          </timepicker-pop>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="divright" style="margin-right: -28px; margin-top: 15px;">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
 </div>
 {% endblock %}
 
