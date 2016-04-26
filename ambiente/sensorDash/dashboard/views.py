@@ -38,6 +38,7 @@ def dashboard(request):
     sense_values = []
     if request.method == "POST":
         print request.POST
+        print request.POST['initialDate']
 
     for i in range(0, 3):
 
