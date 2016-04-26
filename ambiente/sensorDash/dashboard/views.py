@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 def dashboardData(request):
     sense_values = []
-    if request.method == "GET":
-        print request.GET
-        if len(request.GET) == 4:
-            print request.GET['initialDate']
+    # if request.method == "GET":
+    #     print request.GET
+    #     if len(request.GET) == 4:
+    #         print request.GET['initialDate']
 
     for i in range(0, 3):
 
